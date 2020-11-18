@@ -1,7 +1,7 @@
-let book_collection = [
+const book_collection = [
   {
-    id: 1,
-    title: 'a song of ice and fire',
+    id: 4,
+    title: 'a song of ice and fire 1',
     author: 'george r.r martin',
     'nbr-of-pages': '649',
     language: 'english',
@@ -9,8 +9,8 @@ let book_collection = [
     'read-status': true,
   },
   {
-    id: 2,
-    title: 'a song of ice and fire 3',
+    id: 6,
+    title: 'a song of ice and fire 2',
     author: 'george r.r martin',
     'nbr-of-pages': '649',
     language: 'english',
@@ -18,7 +18,7 @@ let book_collection = [
     'read-status': false,
   },
   {
-    id: 3,
+    id: 7,
     title: 'a song of ice and fire 3',
     author: 'george r.r martin',
     'nbr-of-pages': '649',
@@ -27,7 +27,7 @@ let book_collection = [
     'read-status': true,
   },
   {
-    id: 4,
+    id: 8,
     title: 'a song of ice and fire 4',
     author: 'george r.r martin',
     'nbr-of-pages': '649',
@@ -36,6 +36,12 @@ let book_collection = [
     'read-status': false,
   },
 ];
+
+//dom elements
+const bookshelf = document.querySelector('.row');
+const add_new_book_btn = document.querySelector('.new-book');
+const new_book_section = document.querySelector('.add_book_section');
+const new_book_input_fields = document.querySelectorAll('input');
 
 // add books to the localStorage
 (function add_testing_books() {
@@ -61,15 +67,11 @@ function add_book_to_ui(book) {
     <span class="b-lable">Published: </span> ${book['publishing-date']}</span>
 </div>`;
 
-  document
-    .querySelector('.row')
-    .insertAdjacentHTML('beforeend', book_template_html);
+  bookshelf.insertAdjacentHTML('beforeend', book_template_html);
 }
 
 function remove_book_from_ui(book_id) {
-  document
-    .querySelector('.row')
-    .removeChild(document.querySelector(`#book-${book_id}`));
+  bookshelf.removeChild(document.querySelector(`#book-${book_id}`));
 }
 
 function remove_book_from_localeStorage(rm_book_id) {
@@ -87,6 +89,12 @@ function remove_book_from_localeStorage(rm_book_id) {
   );
 }
 
+function new_book_form_clear_fields() {
+  new_book_input_fields.forEach((field) => {
+    field.value = '';
+  });
+}
+
 window.addEventListener('load', (e) => {
   if (localStorage.getItem('book_collection')) {
     let saved_books_collection = JSON.parse(
@@ -99,7 +107,7 @@ window.addEventListener('load', (e) => {
   }
 });
 
-document.querySelector('.row').addEventListener('click', (e) => {
+bookshelf.addEventListener('click', (e) => {
   if (e.target.classList.contains('remove-book')) {
     let book_id = e.target.parentNode.id.substring(
       e.target.parentNode.id.indexOf('-') + 1
@@ -107,5 +115,21 @@ document.querySelector('.row').addEventListener('click', (e) => {
 
     remove_book_from_localeStorage(book_id);
     remove_book_from_ui(book_id);
+  }
+});
+
+add_new_book_btn.addEventListener('click', (e) => {
+  new_book_section.style.display = 'flex';
+});
+
+new_book_section.addEventListener('click', (e) => {
+  // close form if clicked on the empty portion or on close btn
+  if (
+    e.target.className === 'add_book_section' ||
+    e.target.classList.contains('close-form')
+  ) {
+    new_book_section.style.display = 'none';
+
+    new_book_form_clear_fields();
   }
 });

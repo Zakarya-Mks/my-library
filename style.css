@@ -218,7 +218,6 @@ html {
 }
 
 .add_book_section {
-  display: none !important;
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -227,7 +226,7 @@ html {
   z-index: 999;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  display: flex;
+  display: none;
   align-items: center;
 }
 .add_book_section .new-book-form {
