@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My library</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section class="main_container">
+      <div class="logo">
+        <img
+          src="https://www.flaticon.com/svg/static/icons/svg/1164/1164682.svg"
+          alt="a Book Logo"
+          class="logo-img"
+        />
+        <h1 class="logo-title">My Library</h1>
+      </div>
+      <button class="btn new-book"><span class="material-icons">
+        add
+        </span></button>
+
+      <div class="row">
+        <div class="single_book read">
+          <span class="material-icons remove-book"> highlight_off </span>
+          <h3 class="book-title">A Song of Ice and Fire</h3>
+          <span class="book-author"
+            ><span class="b-lable">By: </span>George R. R. Martin</span
+          >
+          <span class="pages-count">
+            <span class="b-lable">Number of pages: </span> 694</span
+          >
+          <span class="book-language">
+            <span class="b-lable">Language: </span> english</span
+          >
+          <span class="book-published">
+            <span class="b-lable">Published: </span> july 1, 1996</span
+          >
+          <span class="read-or-not"></span>
+        </div>
+
+        <div class="single_book not-read">
+          <span class="material-icons remove-book"> highlight_off </span>
+          <h3 class="book-title">A Song of Ice and Fire</h3>
+          <span class="book-author"
+            ><span class="b-lable">By: </span>George R. R. Martin</span
+          >
+          <span class="pages-count">
+            <span class="b-lable">Number of pages: </span> 694</span
+          >
+          <span class="book-language">
+            <span class="b-lable">Language: </span> english</span
+          >
+          <span class="book-published">
+            <span class="b-lable">Published: </span> july 1, 1996</span
+          >
+          <span class="read-or-not"></span>
+        </div>
+
+        <div class="single_book not-read">
+          <span class="material-icons remove-book"> highlight_off </span>
+          <h3 class="book-title">A Song of Ice and Fire</h3>
+          <span class="book-author"
+            ><span class="b-lable">By: </span>George R. R. Martin</span
+          >
+          <span class="pages-count">
+            <span class="b-lable">Number of pages: </span> 694</span
+          >
+          <span class="book-language">
+            <span class="b-lable">Language: </span> english</span
+          >
+          <span class="book-published">
+            <span class="b-lable">Published: </span> july 1, 1996</span
+          >
+          <span class="read-or-not"></span>
+        </div>
+
+        <div class="single_book read">
+          <span class="material-icons remove-book"> highlight_off </span>
+          <h3 class="book-title">A Song of Ice and Fire</h3>
+          <span class="book-author"
+            ><span class="b-lable">By: </span>George R. R. Martin</span
+          >
+          <span class="pages-count">
+            <span class="b-lable">Number of pages: </span> 694</span
+          >
+          <span class="book-language">
+            <span class="b-lable">Language: </span> english</span
+          >
+          <span class="book-published">
+            <span class="b-lable">Published: </span> july 1, 1996</span
+          >
+          <span class="read-or-not"></span>
+        </div>
+      </div>
+    </section>
+    <section class="add_book_section">
+      <div class="new-book-form">
+        <span class="material-icons close-form"> close </span>
+        <label for="b-title"
+          >Book title
+          <input
+            class="form-control"
+            type="text"
+            name="book-title"
+            id="b-title"
+            placeholder="Title"
+        /></label>
+        <label for="b-author"
+          >Book author
+          <input
+            class="form-control"
+            type="text"
+            name="book-author"
+            id="b-author"
+            placeholder="Author"
+        /></label>
+        <label for="b-pages"
+          >Number of pages
+          <input
+            class="form-control"
+            type="number"
+            name="pages-count"
+            id="b-pages"
+            placeholder="Number of pages"
+        /></label>
+        <label for="b-language"
+          >Language
+          <input
+            class="form-control"
+            type="text"
+            name="book-language"
+            id="b-language"
+            placeholder="Language"            
+        /></label>
+        <label for="b-publishing-date"
+          >Publishing date
+          <input
+            class="form-control"
+            type="date"
+            name="book-publishing-date"
+            id="b-publishing-date"
+        /></label>
+        <label for="b-read"
+          >book status
+          <select class="form-control" name="book-status" id="b-read" >
+            <option value="null" disabled selected>did you read this book?</option>
+            <option value="true">i already read it</option>
+            <option value="false">still have to read it</option></option>
+          </select>
+        </label>
+
+        <div class="new-book-buttons">
+          <button class="btn add-book">add the book</button>
+          <button class="btn clear">Clear fields</button>
+        </div>
+      </div>
+    </section>
+    <script src="./js/app.js"></script>
+  </body>
+</html>

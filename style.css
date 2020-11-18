@@ -1,0 +1,312 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: sans-serif;
+}
+
+.main_container {
+  max-width: 1140px;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 3rem 0;
+  text-align: center;
+}
+.main_container .logo {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.main_container .logo img {
+  display: none;
+}
+.main_container .logo .logo-title {
+  font-size: 3rem;
+}
+@media screen and (min-width: 576px) {
+  .main_container .logo .logo-title {
+    font-size: 3rem;
+    margin-left: 1rem;
+  }
+  .main_container .logo img {
+    display: inline-block;
+    width: auto;
+    height: 100px;
+  }
+}
+.main_container .new-book {
+  border: none;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+  background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
+  color: #fff;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+.main_container .new-book span {
+  font-size: 2rem;
+  line-height: 1.2;
+  border-radius: 50%;
+}
+.main_container .new-book:hover {
+  cursor: pointer;
+}
+.main_container .row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 20px;
+  margin: 3rem 0.2rem;
+}
+.main_container .row .single_book {
+  grid-column: span 12;
+  border-radius: 5px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  line-height: 1.2;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+.main_container .row .single_book > * {
+  padding: 5px 0;
+}
+.main_container .row .single_book .remove-book {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+.main_container .row .single_book .remove-book:hover {
+  cursor: pointer;
+}
+.main_container .row .single_book .book-title {
+  font-size: 1.4rem;
+  text-transform: capitalize;
+}
+@media screen and (min-width: 576px) {
+  .main_container .row .single_book {
+    grid-column: 2/span 10;
+    padding: 2rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  .main_container .row .single_book {
+    grid-column: span 6;
+  }
+}
+@media screen and (min-width: 992px) {
+  .main_container .row .single_book {
+    grid-column: span 4;
+  }
+}
+.main_container .row .read {
+  background: linear-gradient(135deg, rgba(24, 77, 104, 0.8) 0%, rgba(87, 202, 133, 0.8) 100%);
+  color: white;
+}
+.main_container .row .not-read {
+  background: linear-gradient(135deg, #e3e3e3 0%, #5d6874 100%);
+}
+@media screen and (min-width: 576px) {
+  .main_container .row {
+    margin: 3rem 1rem;
+  }
+}
+
+.add_book_section {
+  display: none !important;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+}
+.add_book_section .new-book-form {
+  margin-right: auto;
+  margin-left: auto;
+  width: max-content;
+  max-width: 100vw;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  text-align: start;
+  padding: 1rem 1rem;
+  border: solid 1px #d3d3d3;
+  border-radius: 10px;
+  position: relative;
+  background-color: #fff;
+}
+.add_book_section .new-book-form .close-form {
+  position: absolute;
+  top: -5px;
+  right: 5px;
+}
+.add_book_section .new-book-form .close-form:hover {
+  cursor: pointer;
+}
+.add_book_section .new-book-form > * {
+  padding: 10px 0;
+}
+.add_book_section .new-book-form .form-control {
+  border: solid 1px lightgray;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  margin-top: 0.3rem;
+}
+.add_book_section .new-book-form .form-control:focus {
+  outline: lightgray;
+}
+.add_book_section .new-book-form .new-book-buttons {
+  display: flex;
+  flex-direction: column;
+}
+.add_book_section .new-book-form .new-book-buttons .btn {
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  background-color: transparent;
+  border: 1px solid #5d6874;
+  padding: 0.375rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+}
+.add_book_section .new-book-form .new-book-buttons .btn:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.add_book_section .new-book-form .new-book-buttons .btn:focus {
+  outline: rgba(93, 104, 116, 0.7);
+}
+@media screen and (min-width: 576px) {
+  .add_book_section .new-book-form .new-book-buttons {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .add_book_section .new-book-form .new-book-buttons .btn:first-child {
+    width: 60%;
+  }
+}
+@media screen and (min-width: 576px) {
+  .add_book_section .new-book-form {
+    padding: 1rem 3rem;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

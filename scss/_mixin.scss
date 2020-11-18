@@ -1,0 +1,26 @@
+@import 'variable';
+
+@mixin horizontal-center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@mixin break-points($res) {
+  @if ($res == 'sm') {
+    @media screen and (min-width: 576px) {
+      @content;
+    }
+  } @else if($res == 'md') {
+    @media screen and (min-width: 768px) {
+      @content;
+    }
+  } @else if($res == 'lg') {
+    @media screen and (min-width: 992px) {
+      @content;
+    }
+  } @else if($res == 'xl') {
+    @media screen and (min-width: 1200px) {
+      @content;
+    }
+  }
+}
