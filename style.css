@@ -216,6 +216,42 @@ html {
     margin: 3rem 1rem;
   }
 }
+.main_container .empty_library_section {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  grid-column: 2/span 10;
+}
+.main_container .empty_library_section .empty_library_img {
+  width: 100%;
+  opacity: 10%;
+}
+.main_container .empty_library_section .empty_library_text {
+  font-size: 1.7rem;
+  font-weight: bold;
+  line-height: 1.5;
+  position: absolute;
+  opacity: 80%;
+}
+@media screen and (min-width: 576px) {
+  .main_container .empty_library_section {
+    grid-column: 3/span 8;
+  }
+  .main_container .empty_library_section .empty_library_text {
+    font-size: 2rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  .main_container .empty_library_section .empty_library_text {
+    font-size: 3rem;
+  }
+}
+@media screen and (min-width: 992px) {
+  .main_container .empty_library_section {
+    grid-column: 4/span 6;
+  }
+}
 
 .add_book_section {
   width: 100vw;

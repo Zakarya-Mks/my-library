@@ -62,11 +62,38 @@ const new_book_section = document.querySelector('.add_book_section');
 const new_book_input_fields = document.querySelectorAll('input, select');
 document.querySelector('select');
 const new_book_form = document.querySelector('.new-book-form');
+const empty_lib_section = document.querySelector('.empty_library_section');
 
 // add books to the localStorage
 (function add_testing_books() {
   localStorage.setItem('book_collection', JSON.stringify(book_collection));
 })();
+
+// capitalize first letter of any string
+// source stackoverflow
+String.prototype.capitalize = function () {
+  return this.toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+    .join(' ');
+};
+
+//check if the ui is empty and display the empty lib msg
+function check_if_UI_Empty() {
+  let local_book_collection = JSON.parse(
+    localStorage.getItem('book_collection')
+  );
+
+  if (!local_book_collection.length) {
+    empty_lib_section.style.display != 'flex'
+      ? (empty_lib_section.style.display = 'flex')
+      : undefined;
+  } else {
+    empty_lib_section.style.display != 'none'
+      ? (empty_lib_section.style.display = 'none')
+      : undefined;
+  }
+}
 
 function add_book_to_ui(book) {
   let book_template_html = `
@@ -85,11 +112,14 @@ function add_book_to_ui(book) {
     <span class="b-lable">Published: </span> ${book.publishing_date}</span>
 </div>`;
 
+  check_if_UI_Empty();
   bookshelf.insertAdjacentHTML('afterbegin', book_template_html);
 }
 
 function remove_book_from_ui(book_id) {
   bookshelf.removeChild(document.querySelector(`#book-${book_id}`));
+
+  check_if_UI_Empty();
 }
 
 function remove_book_from_localeStorage(rm_book_id) {
@@ -178,7 +208,7 @@ function get_book_form_input_fields() {
     } else if (element.type.toLowerCase() === 'number') {
       temp_book[`${element_id}`] = element.value;
     } else {
-      temp_book[`${element_id}`] = element.value;
+      temp_book[`${element_id}`] = element.value.capitalize();
     }
   });
 
