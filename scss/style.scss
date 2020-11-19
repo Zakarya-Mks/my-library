@@ -200,6 +200,17 @@ html {
         outline: rgb(211, 211, 211);
       }
     }
+
+    .err-msg {
+      display: none;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      color: red;
+    }
+
+    .err-msg-display {
+      display: block;
+    }
     .new-book-buttons {
       display: flex;
       flex-direction: column;

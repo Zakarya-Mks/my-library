@@ -103,56 +103,56 @@
       <div class="new-book-form">
         <span class="material-icons close-form"> close </span>
         <label for="b-title"
-          >Book title
+          >Book title*
           <input
             class="form-control"
             type="text"
             name="book-title"
             id="b-title"
             placeholder="Title"
-        /></label>
+        /><small class="err-msg">* Book title is required</small></label>
         <label for="b-author"
-          >Book author
+          >Book author*
           <input
             class="form-control"
             type="text"
             name="book-author"
             id="b-author"
             placeholder="Author"
-        /></label>
-        <label for="b-pages"
-          >Number of pages
+        /><small class="err-msg">* Book author is required</small></label>
+        <label for="b-nbr_of_pages"
+          >Number of pages*
           <input
             class="form-control"
             type="number"
             name="pages-count"
-            id="b-pages"
+            id="b-nbr_of_pages"
             placeholder="Number of pages"
-        /></label>
+        /><small class="err-msg">* Book number of pages is required</small></label>
         <label for="b-language"
-          >Language
+          >Language*
           <input
             class="form-control"
             type="text"
             name="book-language"
             id="b-language"
             placeholder="Language"            
-        /></label>
-        <label for="b-publishing-date"
-          >Publishing date
+        /><small class="err-msg">* Book language is required</small></label>
+        <label for="b-publishing_date"
+          >Publishing date*
           <input
             class="form-control"
             type="date"
             name="book-publishing-date"
-            id="b-publishing-date"
-        /></label>
-        <label for="b-read"
-          >book status
-          <select class="form-control" name="book-status" id="b-read" >
+            id="b-publishing_date"
+        /><small class="err-msg">* Book publishing date is required</small></label>
+        <label for="b-read_status"
+          >book status*
+          <select class="form-control" name="book-status" id="b-read_status" >
             <option value="null" disabled selected>did you read this book?</option>
             <option value="true">i already read it</option>
             <option value="false">still have to read it</option></option>
-          </select>
+          </select><small class="err-msg">* Book reading status is required</small>
         </label>
 
         <div class="new-book-buttons">

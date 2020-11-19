@@ -269,6 +269,15 @@ html {
 .add_book_section .new-book-form .form-control:focus {
   outline: lightgray;
 }
+.add_book_section .new-book-form .err-msg {
+  display: none;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  color: red;
+}
+.add_book_section .new-book-form .err-msg-display {
+  display: block;
+}
 .add_book_section .new-book-form .new-book-buttons {
   display: flex;
   flex-direction: column;
