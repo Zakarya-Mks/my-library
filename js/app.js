@@ -85,7 +85,7 @@ function add_book_to_ui(book) {
     <span class="b-lable">Published: </span> ${book.publishing_date}</span>
 </div>`;
 
-  bookshelf.insertAdjacentHTML('beforeend', book_template_html);
+  bookshelf.insertAdjacentHTML('afterbegin', book_template_html);
 }
 
 function remove_book_from_ui(book_id) {
@@ -144,13 +144,31 @@ function check_user_input() {
   return score === 6 ? true : false;
 }
 
+function get_new_book_index() {
+  let local_book_collection = JSON.parse(
+    localStorage.getItem('book_collection')
+  );
+
+  if (local_book_collection.length) {
+    let book_Arr = Array.from(local_book_collection);
+
+    let last_book = book_Arr[book_Arr.length - 1];
+
+    return last_book.id + 1;
+  } else {
+    return 1;
+  }
+}
+
 function get_book_form_input_fields() {
   let temp_book = {};
+  temp_book.id = get_new_book_index();
+
   new_book_input_fields.forEach((element) => {
     const element_id = element.id.substr(element.id.indexOf('-') + 1);
 
     if (element.tagName.toLowerCase() === 'select') {
-      temp_book[`${element_id}`] = element.value;
+      temp_book[`${element_id}`] = element.value === 'true';
     } else if (element.type.toLowerCase() === 'date') {
       let book_formatted_date = new Date(element.value).toDateString();
 
@@ -164,12 +182,31 @@ function get_book_form_input_fields() {
     }
   });
 
-  console.log(temp_book);
+  return temp_book;
 }
-function add_book_to_localStorage() {}
+
+function add_book_to_localStorage(book) {
+  let local_book_collection = JSON.parse(
+    localStorage.getItem('book_collection')
+  );
+  if (local_book_collection.length) {
+    let temp_books_collection = Array.from(local_book_collection);
+    temp_books_collection.push(book);
+
+    localStorage.setItem(
+      'book_collection',
+      JSON.stringify(temp_books_collection)
+    );
+  } else {
+    localStorage.setItem('book_collection', JSON.stringify([book]));
+  }
+}
 
 window.addEventListener('load', (e) => {
-  if (localStorage.getItem('book_collection')) {
+  let local_book_collection = JSON.parse(
+    localStorage.getItem('book_collection')
+  );
+  if (local_book_collection.length) {
     let saved_books_collection = JSON.parse(
       localStorage.getItem('book_collection')
     );
@@ -216,8 +253,11 @@ new_book_form.addEventListener('click', (e) => {
   // add new book button event
   else if (e.target.classList.contains('add-book')) {
     if (check_user_input()) {
-      get_book_form_input_fields();
-      add_book_to_localStorage();
+      const book_to_add = get_book_form_input_fields();
+      add_book_to_localStorage(book_to_add);
+      add_book_to_ui(book_to_add);
+      alert('done');
+      new_book_form_clear_fields();
     }
   }
 });
