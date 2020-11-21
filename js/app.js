@@ -1,20 +1,4 @@
-function Book(
-  id,
-  title,
-  author,
-  nbr_of_pages,
-  language,
-  publishing_date,
-  read_status
-) {
-  this.id = id;
-  this.title = title;
-  (this.author = author), nbr_of;
-  this.nbr_of_pages = nbr_of_pages;
-  this.language = language;
-  this.publishing_date = publishing_date;
-  this.read_status = read_status;
-}
+// auto add books to local storage
 
 const book_collection = [
   {
@@ -55,19 +39,100 @@ const book_collection = [
   },
 ];
 
-//dom elements
-const bookshelf = document.querySelector('.row');
-const add_new_book_btn = document.querySelector('.new-book');
-const new_book_section = document.querySelector('.add_book_section');
-const new_book_input_fields = document.querySelectorAll('input, select');
-document.querySelector('select');
-const new_book_form = document.querySelector('.new-book-form');
-const empty_lib_section = document.querySelector('.empty_library_section');
-
 // add books to the localStorage
 (function add_testing_books() {
   localStorage.setItem('book_collection', JSON.stringify(book_collection));
 })();
+
+//-------------------------------------
+
+Storage.prototype.remove = function (rm_book_id) {
+  let local_storage_book_collection = localStorage.getItem('book_collection');
+  let temp_collection = JSON.parse(local_storage_book_collection).filter(
+    (book) => {
+      if (book.id != rm_book_id) {
+        return book;
+      }
+    }
+  );
+
+  localStorage.setItem('book_collection', JSON.stringify(temp_collection));
+};
+
+Storage.prototype.add = function (book) {
+  let local_storage_book_collection = localStorage.getItem('book_collection');
+  let book_collection = JSON.parse(local_storage_book_collection);
+  if (local_storage_book_collection && book_collection.length > 0) {
+    let temp_collection = Array.from(book_collection);
+    temp_collection.push(book);
+
+    localStorage.setItem('book_collection', JSON.stringify(temp_collection));
+  } else {
+    localStorage.setItem('book_collection', JSON.stringify([book]));
+  }
+};
+
+Storage.prototype.read = function () {
+  let local_storage_book_collection = localStorage.getItem('book_collection');
+  let book_collection = JSON.parse(local_storage_book_collection);
+  if (local_storage_book_collection && book_collection.length > 0) {
+    return book_collection;
+  } else {
+    return false;
+  }
+};
+
+function Book(
+  id,
+  title,
+  author,
+  nbr_of_pages,
+  language,
+  publishing_date,
+  read_status
+) {
+  this.id = id;
+  this.title = title;
+  this.author = author;
+  this.nbr_of_pages = nbr_of_pages;
+  this.language = language;
+  this.publishing_date = publishing_date;
+  this.read_status = read_status;
+  this.insertion_date = new Date().toLocaleString();
+}
+
+Book.prototype.render = function () {
+  const book_html_template = `
+  <div class="single_book ${this.read_status ? 'read' : 'not-read'}" id="book-${
+    this.id
+  }">
+  <span class="material-icons remove-book"> highlight_off </span>
+  <h3 class="book-title">${this.title}</h3>
+  <span class="book-author">
+  <span class="b-lable">By: </span>${this.author}</span>
+  <span class="pages-count">
+    <span class="b-lable">Number of pages: </span> ${this.nbr_of_pages}</span>
+  <span class="book-language">
+    <span class="b-lable">Language: </span> ${this.language}</span>
+  <span class="book-published">
+    <span class="b-lable">Published: </span> ${this.publishing_date}</span>
+</div>`;
+
+  return book_html_template;
+};
+
+Book.prototype.generate_id = function () {
+  let book_collection = localStorage.read();
+  if (book_collection) {
+    let book_Arr = Array.from(book_collection);
+
+    let last_book = book_Arr[book_Arr.length - 1];
+
+    return last_book.id + 1;
+  } else {
+    return 1;
+  }
+};
 
 // capitalize first letter of any string
 // source stackoverflow
@@ -78,67 +143,40 @@ String.prototype.capitalize = function () {
     .join(' ');
 };
 
-//check if the ui is empty and display the empty lib msg
-function check_if_UI_Empty() {
-  let local_book_collection = JSON.parse(
-    localStorage.getItem('book_collection')
-  );
+//---------
+function vue_manager(dom_element) {
+  this.dom_element = dom_element;
+}
 
-  if (!local_book_collection.length) {
-    empty_lib_section.style.display != 'flex'
-      ? (empty_lib_section.style.display = 'flex')
+//im selection the second row avoiding the status_bar row
+let bookshelf = new vue_manager(document.querySelectorAll('.row')[1]);
+let add_new_book_btn = new vue_manager(document.querySelector('.new-book'));
+let new_book_section = new vue_manager(
+  document.querySelector('.add_book_section')
+);
+let new_book_form = new vue_manager(document.querySelector('.new-book-form'));
+let new_book_input_fields = new vue_manager(
+  document.querySelectorAll('input, select')
+);
+let empty_lib_section = new vue_manager(
+  document.querySelector('.empty_library_section')
+);
+
+vue_manager.prototype.check_for_empty_bookCollection = function () {
+  let book_collection = localStorage.read();
+  if (!book_collection) {
+    empty_lib_section.dom_element.style.display != 'flex'
+      ? (empty_lib_section.dom_element.style.display = 'flex')
       : undefined;
   } else {
-    empty_lib_section.style.display != 'none'
-      ? (empty_lib_section.style.display = 'none')
+    empty_lib_section.dom_element.style.display != 'none'
+      ? (empty_lib_section.dom_element.style.display = 'none')
       : undefined;
   }
-}
+};
 
-function add_book_to_ui(book) {
-  let book_template_html = `
-  <div class="single_book ${book.read_status ? 'read' : 'not-read'}" id="book-${
-    book.id
-  }">
-  <span class="material-icons remove-book"> highlight_off </span>
-  <h3 class="book-title">${book.title}</h3>
-  <span class="book-author">
-  <span class="b-lable">By: </span>${book.author}</span>
-  <span class="pages-count">
-    <span class="b-lable">Number of pages: </span> ${book.nbr_of_pages}</span>
-  <span class="book-language">
-    <span class="b-lable">Language: </span> ${book.language}</span>
-  <span class="book-published">
-    <span class="b-lable">Published: </span> ${book.publishing_date}</span>
-</div>`;
-
-  check_if_UI_Empty();
-  bookshelf.insertAdjacentHTML('afterbegin', book_template_html);
-}
-
-function remove_book_from_ui(book_id) {
-  bookshelf.removeChild(document.querySelector(`#book-${book_id}`));
-
-  check_if_UI_Empty();
-}
-
-function remove_book_from_localeStorage(rm_book_id) {
-  let temp_books_collection = JSON.parse(
-    localStorage.getItem('book_collection')
-  ).filter((book) => {
-    if (book.id != rm_book_id) {
-      return book;
-    }
-  });
-
-  localStorage.setItem(
-    'book_collection',
-    JSON.stringify(temp_books_collection)
-  );
-}
-
-function new_book_form_clear_fields() {
-  new_book_input_fields.forEach((field) => {
+vue_manager.prototype.clear_Form_fields = function () {
+  new_book_input_fields.dom_element.forEach((field) => {
     if (field.tagName.toLowerCase() == 'select') {
       field.selectedIndex = 0;
       field.nextSibling.style.display = 'none';
@@ -147,11 +185,11 @@ function new_book_form_clear_fields() {
       field.nextSibling.style.display = 'none';
     }
   });
-}
+};
 
-function check_user_input() {
+vue_manager.prototype.check_user_entries = function () {
   let score = 6;
-  new_book_input_fields.forEach((element) => {
+  new_book_input_fields.dom_element.forEach((element) => {
     if (element.tagName.toLowerCase() === 'select') {
       element.value === 'null'
         ? (score--, (element.nextSibling.style.display = 'block'))
@@ -172,29 +210,11 @@ function check_user_input() {
   });
 
   return score === 6 ? true : false;
-}
+};
 
-function get_new_book_index() {
-  let local_book_collection = JSON.parse(
-    localStorage.getItem('book_collection')
-  );
-
-  if (local_book_collection.length) {
-    let book_Arr = Array.from(local_book_collection);
-
-    let last_book = book_Arr[book_Arr.length - 1];
-
-    return last_book.id + 1;
-  } else {
-    return 1;
-  }
-}
-
-function get_book_form_input_fields() {
+vue_manager.prototype.generate_book_from_user_entries = function () {
   let temp_book = {};
-  temp_book.id = get_new_book_index();
-
-  new_book_input_fields.forEach((element) => {
+  new_book_input_fields.dom_element.forEach((element) => {
     const element_id = element.id.substr(element.id.indexOf('-') + 1);
 
     if (element.tagName.toLowerCase() === 'select') {
@@ -212,82 +232,91 @@ function get_book_form_input_fields() {
     }
   });
 
-  return temp_book;
-}
-
-function add_book_to_localStorage(book) {
-  let local_book_collection = JSON.parse(
-    localStorage.getItem('book_collection')
+  let book = new Book(
+    null,
+    temp_book.author,
+    temp_book.title,
+    temp_book.nbr_of_pages,
+    temp_book.language,
+    temp_book.publishing_date,
+    temp_book.read_status
   );
-  if (local_book_collection.length) {
-    let temp_books_collection = Array.from(local_book_collection);
-    temp_books_collection.push(book);
+  book.id = book.generate_id();
+  return book;
+};
 
-    localStorage.setItem(
-      'book_collection',
-      JSON.stringify(temp_books_collection)
-    );
-  } else {
-    localStorage.setItem('book_collection', JSON.stringify([book]));
-  }
-}
+vue_manager.prototype.remove_book = function (book_id) {
+  bookshelf.dom_element.removeChild(document.querySelector(`#book-${book_id}`));
+
+  bookshelf.check_for_empty_bookCollection();
+};
+
+vue_manager.prototype.display_book = function (book) {
+  bookshelf.check_for_empty_bookCollection();
+  bookshelf.dom_element.insertAdjacentHTML('afterbegin', book);
+};
 
 window.addEventListener('load', (e) => {
-  let local_book_collection = JSON.parse(
-    localStorage.getItem('book_collection')
-  );
-  if (local_book_collection.length) {
-    let saved_books_collection = JSON.parse(
-      localStorage.getItem('book_collection')
-    );
-
-    saved_books_collection.forEach((book) => {
-      add_book_to_ui(book);
+  bookshelf.check_for_empty_bookCollection();
+  const local_book_collection = localStorage.read();
+  if (local_book_collection) {
+    local_book_collection.forEach((element) => {
+      let book = new Book(
+        element.id,
+        element.author,
+        element.title,
+        element.nbr_of_pages,
+        element.language,
+        element.publishing_date,
+        element.read_status
+      );
+      bookshelf.display_book(book.render());
     });
   }
 });
 
-bookshelf.addEventListener('click', (e) => {
+bookshelf.dom_element.addEventListener('click', (e) => {
   if (e.target.classList.contains('remove-book')) {
     let book_id = e.target.parentNode.id.substring(
       e.target.parentNode.id.indexOf('-') + 1
     );
 
-    remove_book_from_localeStorage(book_id);
-    remove_book_from_ui(book_id);
+    localStorage.remove(book_id);
+    bookshelf.remove_book(book_id);
   }
 });
 
-add_new_book_btn.addEventListener('click', (e) => {
-  new_book_section.style.display = 'flex';
+add_new_book_btn.dom_element.addEventListener('click', (e) => {
+  new_book_section.dom_element.style.display = 'flex';
 });
 
-new_book_section.addEventListener('click', (e) => {
+new_book_section.dom_element.addEventListener('click', (e) => {
   // close form if clicked on the empty portion or on close btn
   if (
     e.target.className === 'add_book_section' ||
     e.target.classList.contains('close-form')
   ) {
-    new_book_section.style.display = 'none';
+    new_book_section.dom_element.style.display = 'none';
 
-    new_book_form_clear_fields();
+    new_book_form.clear_Form_fields();
   }
 });
 
-new_book_form.addEventListener('click', (e) => {
+new_book_form.dom_element.addEventListener('click', (e) => {
   // clear fields button events
   if (e.target.classList.contains('clear')) {
-    new_book_form_clear_fields();
+    new_book_form.clear_Form_fields();
   }
 
   // add new book button event
   else if (e.target.classList.contains('add-book')) {
-    if (check_user_input()) {
-      const book_to_add = get_book_form_input_fields();
-      add_book_to_localStorage(book_to_add);
-      add_book_to_ui(book_to_add);
+    if (new_book_form.check_user_entries()) {
+      const new_book = new_book_form.generate_book_from_user_entries();
+      localStorage.add(new_book);
+      let rendered_book = new_book.render();
+      bookshelf.display_book(rendered_book);
+      new_book_form.clear_Form_fields();
       alert('done');
-      new_book_form_clear_fields();
     }
   }
 });

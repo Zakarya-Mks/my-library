@@ -5,6 +5,16 @@
   margin-left: auto;
 }
 
+@mixin margin-x($size) {
+  margin-right: $size;
+  margin-left: $size;
+}
+
+@mixin margin-y($size) {
+  margin-right: $size;
+  margin-left: $size;
+}
+
 @mixin break-points($res) {
   @if ($res == 'sm') {
     @media screen and (min-width: 576px) {
