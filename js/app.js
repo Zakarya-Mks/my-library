@@ -150,33 +150,31 @@ function vue_manager(dom_element) {
 
 //im selection the second row avoiding the status_bar row
 let bookshelf = new vue_manager(document.querySelectorAll('.row')[1]);
-let add_new_book_btn = new vue_manager(document.querySelector('.new-book'));
-let new_book_section = new vue_manager(
-  document.querySelector('.add_book_section')
-);
 let new_book_form = new vue_manager(document.querySelector('.new-book-form'));
-let new_book_input_fields = new vue_manager(
-  document.querySelectorAll('input, select')
-);
-let empty_lib_section = new vue_manager(
-  document.querySelector('.empty_library_section')
-);
+
+let add_new_book_btn = document.querySelector('.new-book');
+let new_book_section = document.querySelector('.add_book_section');
+let new_book_input_fields = document.querySelectorAll('input, select');
+let empty_lib_section = document.querySelector('.empty_library_section');
+let books_total_count = document.querySelector('#books_count');
+let read_count = document.querySelector('#read_b_count');
+let not_read_count = document.querySelector('#not_read_b_count');
 
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
   if (!book_collection) {
-    empty_lib_section.dom_element.style.display != 'flex'
-      ? (empty_lib_section.dom_element.style.display = 'flex')
+    empty_lib_section.style.display != 'flex'
+      ? (empty_lib_section.style.display = 'flex')
       : undefined;
   } else {
-    empty_lib_section.dom_element.style.display != 'none'
-      ? (empty_lib_section.dom_element.style.display = 'none')
+    empty_lib_section.style.display != 'none'
+      ? (empty_lib_section.style.display = 'none')
       : undefined;
   }
 };
 
 vue_manager.prototype.clear_Form_fields = function () {
-  new_book_input_fields.dom_element.forEach((field) => {
+  new_book_input_fields.forEach((field) => {
     if (field.tagName.toLowerCase() == 'select') {
       field.selectedIndex = 0;
       field.nextSibling.style.display = 'none';
@@ -189,7 +187,7 @@ vue_manager.prototype.clear_Form_fields = function () {
 
 vue_manager.prototype.check_user_entries = function () {
   let score = 6;
-  new_book_input_fields.dom_element.forEach((element) => {
+  new_book_input_fields.forEach((element) => {
     if (element.tagName.toLowerCase() === 'select') {
       element.value === 'null'
         ? (score--, (element.nextSibling.style.display = 'block'))
@@ -214,7 +212,7 @@ vue_manager.prototype.check_user_entries = function () {
 
 vue_manager.prototype.generate_book_from_user_entries = function () {
   let temp_book = {};
-  new_book_input_fields.dom_element.forEach((element) => {
+  new_book_input_fields.forEach((element) => {
     const element_id = element.id.substr(element.id.indexOf('-') + 1);
 
     if (element.tagName.toLowerCase() === 'select') {
@@ -256,8 +254,24 @@ vue_manager.prototype.display_book = function (book) {
   bookshelf.dom_element.insertAdjacentHTML('afterbegin', book);
 };
 
+vue_manager.prototype.update_book_log = function () {
+  const local_book_collection = localStorage.read();
+  if (local_book_collection) {
+    books_total_count.textContent = local_book_collection.length;
+    let read = local_book_collection.filter((book) => book.read_status);
+    read_count.textContent = read.length;
+    not_read_count.textContent = local_book_collection.length - read.length;
+  } else {
+    books_total_count.textContent = 0;
+    read_count.textContent = 0;
+    not_read_count.textContent = 0;
+  }
+};
+
 window.addEventListener('load', (e) => {
   bookshelf.check_for_empty_bookCollection();
+  bookshelf.update_book_log();
+
   const local_book_collection = localStorage.read();
   if (local_book_collection) {
     local_book_collection.forEach((element) => {
@@ -283,20 +297,21 @@ bookshelf.dom_element.addEventListener('click', (e) => {
 
     localStorage.remove(book_id);
     bookshelf.remove_book(book_id);
+    bookshelf.update_book_log();
   }
 });
 
-add_new_book_btn.dom_element.addEventListener('click', (e) => {
-  new_book_section.dom_element.style.display = 'flex';
+add_new_book_btn.addEventListener('click', (e) => {
+  new_book_section.style.display = 'flex';
 });
 
-new_book_section.dom_element.addEventListener('click', (e) => {
+new_book_section.addEventListener('click', (e) => {
   // close form if clicked on the empty portion or on close btn
   if (
     e.target.className === 'add_book_section' ||
     e.target.classList.contains('close-form')
   ) {
-    new_book_section.dom_element.style.display = 'none';
+    new_book_section.style.display = 'none';
 
     new_book_form.clear_Form_fields();
   }
@@ -318,5 +333,7 @@ new_book_form.dom_element.addEventListener('click', (e) => {
       new_book_form.clear_Form_fields();
       alert('done');
     }
+
+    bookshelf.update_book_log();
   }
 });
