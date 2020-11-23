@@ -40,9 +40,9 @@ const book_collection = [
 ];
 
 // add books to the localStorage
-// (function add_testing_books() {
-//   localStorage.setItem('book_collection', JSON.stringify(book_collection));
-// })();
+(function add_testing_books() {
+  localStorage.setItem('book_collection', JSON.stringify(book_collection));
+})();
 
 //-------------------------------------
 
@@ -120,7 +120,7 @@ Book.prototype.render = function () {
   <div class="single_book ${this.read_status ? 'read' : 'not-read'}" id="book-${
     this.id
   }">
-  <span class="material-icons remove-book"> highlight_off </span>
+  <span class="material-icons remove-book"> close </span>
   <h3 class="book-title">${this.title}</h3>
   <span class="book-author">
   <span class="b-lable">By: </span>${this.author}</span>

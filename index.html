@@ -44,7 +44,16 @@
       </button>
       <div class="row">
         <div class="status_bar">
-          <div class="order"></div>
+          <div class="order">
+            <label for="order"
+              >order by:
+              <select name="order" id="order">
+                <option value="Insertion_date" selected>Insertion date</option>
+                <option value="publishing_date">Publishing date</option>
+                <option value="read_status">Read Status</option>
+              </select></label
+            >
+          </div>
           <div class="map">
             <div class="read_color"></div>
             <h4>Read</h4>
@@ -69,6 +78,7 @@
     </section>
     <section class="add_book_section">
       <div class="new-book-form">
+        <h2 class="form_title">Add new book</h2>
         <span class="material-icons close-form"> close </span>
         <label for="b-title"
           >Book title*
