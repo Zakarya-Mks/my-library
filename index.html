@@ -45,14 +45,17 @@
       <div class="row">
         <div class="status_bar">
           <div class="order">
-            <label for="order"
+            <label for="order_by"
               >order by:
-              <select name="order" id="order">
-                <option value="Insertion_date" selected>Insertion date</option>
+              <select name="order_by" id="order_by">
+                <option value="insertion_date" selected>Insertion date</option>
                 <option value="publishing_date">Publishing date</option>
-                <option value="read_status">Read Status</option>
-              </select></label
-            >
+              </select>
+              <select name="order" id="order">
+                <option value="ascending">Ascending</option>
+                <option value="descending" selected>Descending</option>
+              </select>
+            </label>
           </div>
           <div class="map">
             <div class="read_color"></div>
@@ -60,6 +63,9 @@
             <div class="Not_read_color"></div>
             <h4>Not read</h4>
           </div>
+        </div>
+        <div class="map_help_text">
+          <small>* click on the card to change to reading status</small>
         </div>
       </div>
       <div class="row">
