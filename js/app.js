@@ -7,8 +7,9 @@ const book_collection = [
     author: 'george r.r martin',
     nbr_of_pages: '649',
     language: 'english',
-    publishing_date: '01/07/1996',
+    publishing_date: 'Nov 1 1996',
     read_status: true,
+    insertion_date: '11/23/2020, 1:48:58 PM',
   },
   {
     id: 2,
@@ -16,8 +17,9 @@ const book_collection = [
     author: 'george r.r martin',
     nbr_of_pages: '649',
     language: 'english',
-    publishing_date: '01/07/1996',
+    publishing_date: 'Nov 11 1996',
     read_status: false,
+    insertion_date: '11/23/2020, 4:48:58 PM',
   },
   {
     id: 3,
@@ -25,8 +27,9 @@ const book_collection = [
     author: 'george r.r martin',
     nbr_of_pages: '649',
     language: 'english',
-    publishing_date: '01/07/1996',
+    publishing_date: 'Nov 20 1996',
     read_status: true,
+    insertion_date: '11/23/2020, 2:48:58 PM',
   },
   {
     id: 4,
@@ -34,8 +37,9 @@ const book_collection = [
     author: 'george r.r martin',
     nbr_of_pages: '649',
     language: 'english',
-    publishing_date: '01/07/1996',
+    publishing_date: 'Nov 13 1996',
     read_status: false,
+    insertion_date: '11/23/2020, 5:48:58 PM',
   },
 ];
 
@@ -172,12 +176,16 @@ const new_book_form = new vue_manager(document.querySelector('.new-book-form'));
 
 const add_new_book_btn = document.querySelector('.new-book');
 const new_book_section = document.querySelector('.add_book_section');
-const new_book_input_fields = document.querySelectorAll('input, select');
+const new_book_input_fields = document.querySelectorAll(
+  'input, .new-book-form select'
+);
 const empty_lib_section = document.querySelector('.empty_library_section');
 const books_total_count = document.querySelector('#books_count');
 const read_count = document.querySelector('#read_b_count');
 const not_read_count = document.querySelector('#not_read_b_count');
 let dom_book = undefined;
+const order_by_toggle = document.querySelector('#order_by');
+const order_toggle = document.querySelector('#order');
 
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
@@ -268,6 +276,16 @@ vue_manager.prototype.display_book = function (book) {
   dom_book = document.querySelectorAll('.single_book *');
 };
 
+vue_manager.prototype.display_book_collection = function (book_collection) {
+  if (book_collection) {
+    bookshelf.dom_element.innerHTML = '';
+    book_collection.forEach((element) => {
+      let book = new Book(element);
+      bookshelf.display_book(book.render());
+    });
+  }
+};
+
 vue_manager.prototype.update_book_state = function (book_html_template, id) {
   document
     .querySelector(`#${id}`)
@@ -292,17 +310,41 @@ vue_manager.prototype.update_book_log = function () {
   }
 };
 
+vue_manager.prototype.reorder = function () {
+  let order_by = order_by_toggle.value;
+  let order = order_toggle.value === 'ascending' ? true : false;
+  let book_collection = localStorage.read();
+
+  // if the selected order is ascending the order value is true and the array is sorted accordingly else its false and again the array is sorted accordingly
+
+  if (order_by === 'insertion_date') {
+    book_collection.sort(function (a, b) {
+      let result = order
+        ? new Date(b.insertion_date) - new Date(a.insertion_date)
+        : new Date(a.insertion_date) - new Date(b.insertion_date);
+      return result;
+    });
+  }
+
+  if (order_by === 'publishing_date') {
+    book_collection.sort(function (a, b) {
+      let result = order
+        ? new Date(b.publishing_date) - new Date(a.publishing_date)
+        : new Date(a.publishing_date) - new Date(b.publishing_date);
+      return result;
+    });
+  }
+
+  bookshelf.display_book_collection(book_collection);
+};
+
 window.addEventListener('load', (e) => {
   bookshelf.check_for_empty_bookCollection();
   bookshelf.update_book_log();
 
   const local_book_collection = localStorage.read();
-  if (local_book_collection) {
-    local_book_collection.forEach((element) => {
-      let book = new Book(element);
-      bookshelf.display_book(book.render());
-    });
-  }
+
+  bookshelf.display_book_collection(local_book_collection);
 });
 
 bookshelf.dom_element.addEventListener('click', (e) => {
@@ -374,4 +416,12 @@ new_book_form.dom_element.addEventListener('click', (e) => {
 
     bookshelf.update_book_log();
   }
+});
+
+order_by_toggle.addEventListener('change', (e) => {
+  bookshelf.reorder();
+});
+
+order_toggle.addEventListener('change', (e) => {
+  bookshelf.reorder();
 });
