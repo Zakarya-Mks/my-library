@@ -2,7 +2,7 @@
 
 const book_collection = [
   {
-    id: 4,
+    id: 1,
     title: 'a song of ice and fire 1',
     author: 'george r.r martin',
     nbr_of_pages: '649',
@@ -11,7 +11,7 @@ const book_collection = [
     read_status: true,
   },
   {
-    id: 6,
+    id: 2,
     title: 'a song of ice and fire 2',
     author: 'george r.r martin',
     nbr_of_pages: '649',
@@ -20,7 +20,7 @@ const book_collection = [
     read_status: false,
   },
   {
-    id: 7,
+    id: 3,
     title: 'a song of ice and fire 3',
     author: 'george r.r martin',
     nbr_of_pages: '649',
@@ -29,7 +29,7 @@ const book_collection = [
     read_status: true,
   },
   {
-    id: 8,
+    id: 4,
     title: 'a song of ice and fire 4',
     author: 'george r.r martin',
     nbr_of_pages: '649',
@@ -40,64 +40,78 @@ const book_collection = [
 ];
 
 // add books to the localStorage
-(function add_testing_books() {
-  localStorage.setItem('book_collection', JSON.stringify(book_collection));
-})();
+// (function add_testing_books() {
+//   localStorage.setItem('book_collection', JSON.stringify(book_collection));
+// })();
 
 //-------------------------------------
 
-Storage.prototype.remove = function (rm_book_id) {
+Storage.prototype.read = function (book_id) {
+  book_id = parseInt(book_id);
   let local_storage_book_collection = localStorage.getItem('book_collection');
-  let temp_collection = JSON.parse(local_storage_book_collection).filter(
-    (book) => {
-      if (book.id != rm_book_id) {
-        return book;
-      }
+  let book_collection = JSON.parse(local_storage_book_collection);
+  if (local_storage_book_collection && book_collection.length > 0) {
+    if (book_id) {
+      return new Book(book_collection.filter((book) => book.id === book_id)[0]);
+    } else {
+      return Array.from(book_collection);
     }
-  );
-
-  localStorage.setItem('book_collection', JSON.stringify(temp_collection));
-};
-
-Storage.prototype.add = function (book) {
-  let local_storage_book_collection = localStorage.getItem('book_collection');
-  let book_collection = JSON.parse(local_storage_book_collection);
-  if (local_storage_book_collection && book_collection.length > 0) {
-    let temp_collection = Array.from(book_collection);
-    temp_collection.push(book);
-
-    localStorage.setItem('book_collection', JSON.stringify(temp_collection));
-  } else {
-    localStorage.setItem('book_collection', JSON.stringify([book]));
-  }
-};
-
-Storage.prototype.read = function () {
-  let local_storage_book_collection = localStorage.getItem('book_collection');
-  let book_collection = JSON.parse(local_storage_book_collection);
-  if (local_storage_book_collection && book_collection.length > 0) {
-    return book_collection;
   } else {
     return false;
   }
 };
 
-function Book(
-  id,
-  title,
-  author,
-  nbr_of_pages,
-  language,
-  publishing_date,
-  read_status
-) {
-  this.id = id;
-  this.title = title;
-  this.author = author;
-  this.nbr_of_pages = nbr_of_pages;
-  this.language = language;
-  this.publishing_date = publishing_date;
-  this.read_status = read_status;
+Storage.prototype.write = function (book_collection) {
+  localStorage.setItem('book_collection', JSON.stringify(book_collection));
+};
+
+Storage.prototype.add = function (book) {
+  let local_storage_book_collection = localStorage.read();
+  if (local_storage_book_collection) {
+    local_storage_book_collection.push(book);
+
+    localStorage.write(local_storage_book_collection);
+  } else {
+    localStorage.write(book);
+  }
+};
+
+Storage.prototype.remove = function (rm_book_id) {
+  rm_book_id = parseInt(rm_book_id);
+  let local_storage_book_collection = localStorage.read();
+  if (local_storage_book_collection) {
+    let temp_collection = local_storage_book_collection.filter((book) => {
+      if (book.id != rm_book_id) {
+        return book;
+      }
+    });
+
+    localStorage.write(temp_collection);
+  }
+};
+
+Storage.prototype.update = function (book) {
+  let local_storage_book_collection = localStorage.read();
+  if (local_storage_book_collection) {
+    let temp_collection = local_storage_book_collection.map((element) => {
+      if (element.id === book.id) {
+        return book;
+      } else {
+        return element;
+      }
+    });
+    localStorage.write(temp_collection);
+  }
+};
+
+function Book(book) {
+  this.id = book.id ?? null;
+  this.title = book.title;
+  this.author = book.author;
+  this.nbr_of_pages = book.nbr_of_pages;
+  this.language = book.language;
+  this.publishing_date = book.publishing_date;
+  this.read_status = book.read_status;
   this.insertion_date = new Date().toLocaleString();
 }
 
@@ -134,6 +148,10 @@ Book.prototype.generate_id = function () {
   }
 };
 
+Book.prototype.update_read_status = function () {
+  this.read_status = !this.read_status;
+};
+
 // capitalize first letter of any string
 // source stackoverflow
 String.prototype.capitalize = function () {
@@ -149,16 +167,17 @@ function vue_manager(dom_element) {
 }
 
 //im selection the second row avoiding the status_bar row
-let bookshelf = new vue_manager(document.querySelectorAll('.row')[1]);
-let new_book_form = new vue_manager(document.querySelector('.new-book-form'));
+const bookshelf = new vue_manager(document.querySelectorAll('.row')[1]);
+const new_book_form = new vue_manager(document.querySelector('.new-book-form'));
 
-let add_new_book_btn = document.querySelector('.new-book');
-let new_book_section = document.querySelector('.add_book_section');
-let new_book_input_fields = document.querySelectorAll('input, select');
-let empty_lib_section = document.querySelector('.empty_library_section');
-let books_total_count = document.querySelector('#books_count');
-let read_count = document.querySelector('#read_b_count');
-let not_read_count = document.querySelector('#not_read_b_count');
+const add_new_book_btn = document.querySelector('.new-book');
+const new_book_section = document.querySelector('.add_book_section');
+const new_book_input_fields = document.querySelectorAll('input, select');
+const empty_lib_section = document.querySelector('.empty_library_section');
+const books_total_count = document.querySelector('#books_count');
+const read_count = document.querySelector('#read_b_count');
+const not_read_count = document.querySelector('#not_read_b_count');
+let dom_book = undefined;
 
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
@@ -230,15 +249,7 @@ vue_manager.prototype.generate_book_from_user_entries = function () {
     }
   });
 
-  let book = new Book(
-    null,
-    temp_book.author,
-    temp_book.title,
-    temp_book.nbr_of_pages,
-    temp_book.language,
-    temp_book.publishing_date,
-    temp_book.read_status
-  );
+  let book = new Book(temp_book);
   book.id = book.generate_id();
   return book;
 };
@@ -252,6 +263,19 @@ vue_manager.prototype.remove_book = function (book_id) {
 vue_manager.prototype.display_book = function (book) {
   bookshelf.check_for_empty_bookCollection();
   bookshelf.dom_element.insertAdjacentHTML('afterbegin', book);
+
+  // fill the collection with book children and grandChildren  using it for th book-click on bookshelf event listener
+  dom_book = document.querySelectorAll('.single_book *');
+};
+
+vue_manager.prototype.update_book_state = function (book_html_template, id) {
+  document
+    .querySelector(`#${id}`)
+    .insertAdjacentHTML('afterend', book_html_template);
+  bookshelf.dom_element.removeChild(document.querySelector(`#${id}`));
+
+  // update the collection with book children and grandChildren using it for th book-click on bookshelf event listener
+  dom_book = document.querySelectorAll('.single_book *');
 };
 
 vue_manager.prototype.update_book_log = function () {
@@ -275,15 +299,7 @@ window.addEventListener('load', (e) => {
   const local_book_collection = localStorage.read();
   if (local_book_collection) {
     local_book_collection.forEach((element) => {
-      let book = new Book(
-        element.id,
-        element.author,
-        element.title,
-        element.nbr_of_pages,
-        element.language,
-        element.publishing_date,
-        element.read_status
-      );
+      let book = new Book(element);
       bookshelf.display_book(book.render());
     });
   }
@@ -294,14 +310,30 @@ bookshelf.dom_element.addEventListener('click', (e) => {
     let book_id = e.target.parentNode.id.substring(
       e.target.parentNode.id.indexOf('-') + 1
     );
-
     localStorage.remove(book_id);
     bookshelf.remove_book(book_id);
+    bookshelf.update_book_log();
+  } else if (
+    e.target.classList.contains('single_book') ||
+    Array.from(dom_book).includes(e.target)
+  ) {
+    let book_id = e.target.id
+      ? e.target.id
+      : e.target.parentNode.id
+      ? e.target.parentNode.id
+      : e.target.parentNode.parentNode.id;
+    let clicked_book = localStorage.read(
+      book_id.substring(book_id.indexOf('-') + 1)
+    );
+    clicked_book.update_read_status();
+    localStorage.update(clicked_book);
+    bookshelf.update_book_state(clicked_book.render(), book_id);
     bookshelf.update_book_log();
   }
 });
 
 add_new_book_btn.addEventListener('click', (e) => {
+  e.stopPropagation();
   new_book_section.style.display = 'flex';
 });
 
@@ -311,6 +343,8 @@ new_book_section.addEventListener('click', (e) => {
     e.target.className === 'add_book_section' ||
     e.target.classList.contains('close-form')
   ) {
+    e.stopPropagation();
+
     new_book_section.style.display = 'none';
 
     new_book_form.clear_Form_fields();
@@ -320,11 +354,15 @@ new_book_section.addEventListener('click', (e) => {
 new_book_form.dom_element.addEventListener('click', (e) => {
   // clear fields button events
   if (e.target.classList.contains('clear')) {
+    e.stopPropagation();
+
     new_book_form.clear_Form_fields();
   }
 
   // add new book button event
   else if (e.target.classList.contains('add-book')) {
+    e.stopPropagation();
+
     if (new_book_form.check_user_entries()) {
       const new_book = new_book_form.generate_book_from_user_entries();
       localStorage.add(new_book);

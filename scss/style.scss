@@ -203,6 +203,10 @@ html {
       @include break-points('lg') {
         grid-column: span 4;
       }
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .read {

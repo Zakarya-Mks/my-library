@@ -273,6 +273,9 @@ html {
     grid-column: span 4;
   }
 }
+.main_container .row .single_book:hover {
+  cursor: pointer;
+}
 .main_container .row .read {
   background: linear-gradient(135deg, rgba(24, 77, 104, 0.8) 0%, rgba(87, 202, 133, 0.8) 100%);
   color: white;
