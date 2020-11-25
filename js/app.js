@@ -1,60 +1,26 @@
-// auto add books to local storage
-
+// auto add a book to local storage
 const book_collection = [
   {
     id: 1,
-    title: 'a song of ice and fire 1',
-    author: 'george r.r martin',
-    nbr_of_pages: '649',
-    language: 'english',
-    publishing_date: 'Nov 1 1996',
+    title: 'A Game of Thrones ',
+    author: 'George R. R. Martin',
+    nbr_of_pages: '694',
+    language: '	English',
+    publishing_date: 'July 1 1996',
     read_status: true,
     insertion_date: '11/23/2020, 1:48:58 PM',
   },
-  {
-    id: 2,
-    title: 'a song of ice and fire 2',
-    author: 'george r.r martin',
-    nbr_of_pages: '649',
-    language: 'english',
-    publishing_date: 'Nov 11 1996',
-    read_status: false,
-    insertion_date: '11/23/2020, 4:48:58 PM',
-  },
-  {
-    id: 3,
-    title: 'a song of ice and fire 3',
-    author: 'george r.r martin',
-    nbr_of_pages: '649',
-    language: 'english',
-    publishing_date: 'Nov 20 1996',
-    read_status: true,
-    insertion_date: '11/23/2020, 2:48:58 PM',
-  },
-  {
-    id: 4,
-    title: 'a song of ice and fire 4',
-    author: 'george r.r martin',
-    nbr_of_pages: '649',
-    language: 'english',
-    publishing_date: 'Nov 13 1996',
-    read_status: false,
-    insertion_date: '11/23/2020, 5:48:58 PM',
-  },
 ];
-
 // add books to the localStorage
 (function add_testing_books() {
   localStorage.setItem('book_collection', JSON.stringify(book_collection));
 })();
 
-//-------------------------------------
-
 Storage.prototype.read = function (book_id) {
   book_id = parseInt(book_id);
   let local_storage_book_collection = localStorage.getItem('book_collection');
   let book_collection = JSON.parse(local_storage_book_collection);
-  if (local_storage_book_collection && book_collection.length > 0) {
+  if (book_collection && book_collection.length > 0) {
     if (book_id) {
       return new Book(book_collection.filter((book) => book.id === book_id)[0]);
     } else {
@@ -109,7 +75,7 @@ Storage.prototype.update = function (book) {
 };
 
 function Book(book) {
-  this.id = book.id ?? null;
+  this.id = book.id || null;
   this.title = book.title;
   this.author = book.author;
   this.nbr_of_pages = book.nbr_of_pages;
@@ -119,22 +85,33 @@ function Book(book) {
   this.insertion_date = new Date().toLocaleString();
 }
 
-Book.prototype.render = function () {
+Book.prototype.get_html_markup = function () {
   const book_html_template = `
-  <div class="single_book ${this.read_status ? 'read' : 'not-read'}" id="book-${
-    this.id
-  }">
-  <span class="material-icons remove-book"> close </span>
-  <h3 class="book-title">${this.title}</h3>
-  <span class="book-author">
-  <span class="b-lable">By: </span>${this.author}</span>
-  <span class="pages-count">
-    <span class="b-lable">Number of pages: </span> ${this.nbr_of_pages}</span>
-  <span class="book-language">
-    <span class="b-lable">Language: </span> ${this.language}</span>
-  <span class="book-published">
-    <span class="b-lable">Published: </span> ${this.publishing_date}</span>
-</div>`;
+    <div class="single_book scale-in-center ${
+      this.read_status ? 'read' : ''
+    }" id="book-${this.id}">
+      <span class="material-icons remove-book"> close </span>
+      <h3 class="book-title">${this.title}</h3>
+      <span class="book-author">
+      <span class="b-lable">By: </span>${this.author}</span>
+      <span class="pages-count">
+        <span class="b-lable">Number of pages: </span> ${
+          this.nbr_of_pages
+        }</span>
+      <span class="book-language">
+        <span class="b-lable">Language: </span> ${this.language}</span>
+      <span class="book-published">
+        <span class="b-lable">Published: </span> ${this.publishing_date}</span>
+
+      <span class="read_toggle_label">Mark as read:</span>
+      <label class="toggle-control">
+        <input type="checkbox" id="read_toggle" ${
+          this.read_status ? 'checked' : 'unchecked'
+        }>
+        <span class="control"></span>
+      </label>
+
+    </div>`;
 
   return book_html_template;
 };
@@ -183,10 +160,9 @@ const empty_lib_section = document.querySelector('.empty_library_section');
 const books_total_count = document.querySelector('#books_count');
 const read_count = document.querySelector('#read_b_count');
 const not_read_count = document.querySelector('#not_read_b_count');
-let dom_book = undefined;
 const order_by_toggle = document.querySelector('#order_by');
 const order_toggle = document.querySelector('#order');
-
+let read_toggle = null;
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
   if (!book_collection) {
@@ -272,8 +248,7 @@ vue_manager.prototype.display_book = function (book) {
   bookshelf.check_for_empty_bookCollection();
   bookshelf.dom_element.insertAdjacentHTML('afterbegin', book);
 
-  // fill the collection with book children and grandChildren  using it for th book-click on bookshelf event listener
-  dom_book = document.querySelectorAll('.single_book *');
+  read_toggle = document.querySelector('#read_toggle');
 };
 
 vue_manager.prototype.display_book_collection = function (book_collection) {
@@ -281,19 +256,13 @@ vue_manager.prototype.display_book_collection = function (book_collection) {
     bookshelf.dom_element.innerHTML = '';
     book_collection.forEach((element) => {
       let book = new Book(element);
-      bookshelf.display_book(book.render());
+      bookshelf.display_book(book.get_html_markup());
     });
   }
 };
 
-vue_manager.prototype.update_book_state = function (book_html_template, id) {
-  document
-    .querySelector(`#${id}`)
-    .insertAdjacentHTML('afterend', book_html_template);
-  bookshelf.dom_element.removeChild(document.querySelector(`#${id}`));
-
-  // update the collection with book children and grandChildren using it for th book-click on bookshelf event listener
-  dom_book = document.querySelectorAll('.single_book *');
+vue_manager.prototype.update_book_state = function (id) {
+  document.querySelector(`#${id}`).classList.toggle('read');
 };
 
 vue_manager.prototype.update_book_log = function () {
@@ -353,29 +322,28 @@ bookshelf.dom_element.addEventListener('click', (e) => {
       e.target.parentNode.id.indexOf('-') + 1
     );
     localStorage.remove(book_id);
-    bookshelf.remove_book(book_id);
-    bookshelf.update_book_log();
-  } else if (
-    e.target.classList.contains('single_book') ||
-    Array.from(dom_book).includes(e.target)
-  ) {
-    let book_id = e.target.id
-      ? e.target.id
-      : e.target.parentNode.id
-      ? e.target.parentNode.id
-      : e.target.parentNode.parentNode.id;
+    document
+      .querySelector(`#book-${book_id}`)
+      .classList.add('scale-out-center');
+
+    setTimeout(() => {
+      bookshelf.remove_book(book_id);
+      bookshelf.update_book_log();
+    }, 700);
+  } else if (e.target.id === 'read_toggle') {
+    let book_id = e.target.parentNode.parentNode.id;
     let clicked_book = localStorage.read(
       book_id.substring(book_id.indexOf('-') + 1)
     );
     clicked_book.update_read_status();
     localStorage.update(clicked_book);
-    bookshelf.update_book_state(clicked_book.render(), book_id);
+    bookshelf.update_book_state(book_id);
+
     bookshelf.update_book_log();
   }
 });
 
 add_new_book_btn.addEventListener('click', (e) => {
-  e.stopPropagation();
   new_book_section.style.display = 'flex';
 });
 
@@ -385,8 +353,6 @@ new_book_section.addEventListener('click', (e) => {
     e.target.className === 'add_book_section' ||
     e.target.classList.contains('close-form')
   ) {
-    e.stopPropagation();
-
     new_book_section.style.display = 'none';
 
     new_book_form.clear_Form_fields();
@@ -396,22 +362,18 @@ new_book_section.addEventListener('click', (e) => {
 new_book_form.dom_element.addEventListener('click', (e) => {
   // clear fields button events
   if (e.target.classList.contains('clear')) {
-    e.stopPropagation();
-
     new_book_form.clear_Form_fields();
   }
 
   // add new book button event
   else if (e.target.classList.contains('add-book')) {
-    e.stopPropagation();
-
     if (new_book_form.check_user_entries()) {
       const new_book = new_book_form.generate_book_from_user_entries();
       localStorage.add(new_book);
-      let rendered_book = new_book.render();
+      let rendered_book = new_book.get_html_markup();
       bookshelf.display_book(rendered_book);
       new_book_form.clear_Form_fields();
-      alert('done');
+      new_book_section.style.display = 'none';
     }
 
     bookshelf.update_book_log();

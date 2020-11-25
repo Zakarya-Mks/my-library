@@ -4,4 +4,18 @@ $read_color: linear-gradient(
   rgb(87, 202, 133, 0.8) 100%
 );
 
-$not_read_color: linear-gradient(135deg, #e3e3e3 0%, #5d6874 100%); ;
+$not_read_color: linear-gradient(135deg, #e3e3e3 0%, #5d6874 100%);
+
+// card toggle
+$toggle-background-color-on: rgb(71, 160, 134);
+$toggle-background-color-off: grey;
+$toggle-control-color: white;
+$toggle-border: solid 1px #fff;
+$toggle-width: 40px;
+$toggle-height: 20px;
+$toggle-gutter: 2px;
+$toggle-radius: 50%;
+$toggle-control-speed: 0.15s;
+$toggle-control-ease: ease-in;
+$toggle-radius: $toggle-height / 2;
+$toggle-control-size: $toggle-height - ($toggle-gutter * 2);
