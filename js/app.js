@@ -18,13 +18,15 @@ const book_collection = [
 
 Storage.prototype.read = function (book_id) {
   book_id = parseInt(book_id);
+
   let local_storage_book_collection = localStorage.getItem('book_collection');
   let book_collection = JSON.parse(local_storage_book_collection);
-  if (book_collection && book_collection.length > 0) {
+
+  if (local_storage_book_collection && book_collection.length > 0) {
     if (book_id) {
       return new Book(book_collection.filter((book) => book.id === book_id)[0]);
     } else {
-      return Array.from(book_collection);
+      return book_collection;
     }
   } else {
     return false;
@@ -32,7 +34,10 @@ Storage.prototype.read = function (book_id) {
 };
 
 Storage.prototype.write = function (book_collection) {
-  localStorage.setItem('book_collection', JSON.stringify(book_collection));
+  let book_array = Array.isArray(book_collection)
+    ? book_collection
+    : [book_collection];
+  localStorage.setItem('book_collection', JSON.stringify(book_array));
 };
 
 Storage.prototype.add = function (book) {
@@ -119,9 +124,7 @@ Book.prototype.get_html_markup = function () {
 Book.prototype.generate_id = function () {
   let book_collection = localStorage.read();
   if (book_collection) {
-    let book_Arr = Array.from(book_collection);
-
-    let last_book = book_Arr[book_Arr.length - 1];
+    let last_book = book_collection[book_collection.length - 1];
 
     return last_book.id + 1;
   } else {
@@ -163,16 +166,21 @@ const not_read_count = document.querySelector('#not_read_b_count');
 const order_by_toggle = document.querySelector('#order_by');
 const order_toggle = document.querySelector('#order');
 let read_toggle = null;
+
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
-  if (!book_collection) {
-    empty_lib_section.style.display != 'flex'
-      ? (empty_lib_section.style.display = 'flex')
-      : undefined;
+  let order_by_dom_el = Array.from(document.querySelectorAll('.order select'));
+  if (!book_collection || book_collection.length === 0) {
+    empty_lib_section.style.display = 'flex';
+    order_by_dom_el.forEach((element) => {
+      element.disabled = true;
+    });
   } else {
-    empty_lib_section.style.display != 'none'
-      ? (empty_lib_section.style.display = 'none')
-      : undefined;
+    empty_lib_section.style.display = 'none';
+
+    order_by_dom_el.forEach((element) => {
+      element.disabled = false;
+    });
   }
 };
 
@@ -253,7 +261,13 @@ vue_manager.prototype.display_book = function (book) {
 
 vue_manager.prototype.display_book_collection = function (book_collection) {
   if (book_collection) {
-    bookshelf.dom_element.innerHTML = '';
+    //clear the bookshelf to display the collection
+    Array.from(bookshelf.dom_element.children).forEach((item) => {
+      if (item.className !== 'empty_library_section') {
+        bookshelf.dom_element.removeChild(item);
+      }
+    });
+
     book_collection.forEach((element) => {
       let book = new Book(element);
       bookshelf.display_book(book.get_html_markup());
@@ -329,7 +343,7 @@ bookshelf.dom_element.addEventListener('click', (e) => {
     setTimeout(() => {
       bookshelf.remove_book(book_id);
       bookshelf.update_book_log();
-    }, 700);
+    }, 350);
   } else if (e.target.id === 'read_toggle') {
     let book_id = e.target.parentNode.parentNode.id;
     let clicked_book = localStorage.read(
