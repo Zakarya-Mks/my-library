@@ -166,6 +166,7 @@ const not_read_count = document.querySelector('#not_read_b_count');
 const order_by_toggle = document.querySelector('#order_by');
 const order_toggle = document.querySelector('#order');
 let read_toggle = null;
+const dark_mode_toggle = document.querySelector('#dark-mode-toggle');
 
 vue_manager.prototype.check_for_empty_bookCollection = function () {
   let book_collection = localStorage.read();
@@ -400,4 +401,15 @@ order_by_toggle.addEventListener('change', (e) => {
 
 order_toggle.addEventListener('change', (e) => {
   bookshelf.reorder();
+});
+
+dark_mode_toggle.addEventListener('click', (e) => {
+  const dark_mode_link = document.querySelector('#dark-css');
+  if (dark_mode_link.getAttribute('href')) {
+    dark_mode_toggle.style.color = '#000';
+    dark_mode_link.removeAttribute('href');
+  } else {
+    dark_mode_toggle.style.color = '#fff';
+    dark_mode_link.setAttribute('href', 'dark-theme.css');
+  }
 });

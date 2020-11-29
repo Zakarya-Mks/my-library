@@ -6,6 +6,8 @@
     <title>My library</title>
 
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="" id="dark-css" />
+
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
@@ -40,6 +42,12 @@
           <div class="not_read">
             <h3>Not read:</h3>
             <span id="not_read_b_count"></span>
+          </div>
+          <div class="dark-mode">
+            <span>Dark mode: </span>
+            <span class="material-icons" id="dark-mode-toggle">
+              settings_brightness
+            </span>
           </div>
         </div>
       </header>
@@ -116,6 +124,7 @@
             name="pages-count"
             id="b-nbr_of_pages"
             placeholder="Number of pages"
+            min="1"
           /><small class="err-msg"
             >* Book number of pages is required</small
           ></label

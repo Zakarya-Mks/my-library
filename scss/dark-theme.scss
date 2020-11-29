@@ -1,0 +1,148 @@
+html {
+  color: #e8e6e3;
+  background-color: #181a1b;
+}
+
+.library_log {
+  border-color: rgba(41, 130, 176, 0.8) !important;
+  color: rgba(141, 199, 229, 0.8) !important;
+}
+
+.new-book {
+  outline-color: transparent !important;
+  background-image: linear-gradient(
+    135deg,
+    rgb(10, 106, 182) 0%,
+    rgb(17, 81, 154) 100%
+  ) !important;
+  color: rgb(232, 230, 227) !important;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px !important;
+}
+
+.row {
+  .status_bar {
+    background: rgb(31, 34, 35) !important;
+
+    .order {
+      select {
+        color: inherit !important;
+        border-color: rgba(106, 98, 87, 0.5) !important;
+        background-color: transparent !important;
+      }
+
+      option {
+        background-color: rgb(31, 34, 35) !important;
+      }
+    }
+
+    .map {
+      .read_color {
+        background-image: linear-gradient(
+          135deg,
+          rgba(19, 62, 83, 0.8) 0%,
+          rgba(44, 140, 97, 0.8) 100%
+        ) !important;
+      }
+
+      .Not_read_color {
+        background-image: linear-gradient(
+          135deg,
+          rgb(40, 43, 45) 0%,
+          rgb(79, 85, 89) 100%
+        ) !important;
+      }
+    }
+  }
+
+  .single_book {
+    box-shadow: rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
+      rgba(0, 0, 0, 0.12) 0px 1px 10px 0px, rgba(0, 0, 0, 0.3) 0px 2px 4px -1px !important;
+    background-image: linear-gradient(
+      135deg,
+      rgb(40, 43, 45) 0%,
+      rgb(79, 85, 89) 100%
+    ) !important;
+  }
+
+  .read {
+    background-image: linear-gradient(
+      135deg,
+      rgba(19, 62, 83, 0.8) 0%,
+      rgba(44, 140, 97, 0.8) 100%
+    ) !important;
+    background-color: initial !important;
+    color: rgb(232, 230, 227) !important;
+  }
+}
+
+.empty_library_section {
+  .empty_library_img {
+    opacity: 5% !important;
+    filter: invert(100%);
+  }
+}
+
+.add_book_section {
+  .new-book-form {
+    border-color: rgb(60, 65, 68);
+    background-color: rgb(24, 26, 27);
+
+    .form_title {
+      color: rgb(168, 160, 149) !important;
+    }
+
+    .form-control {
+      background-color: transparent !important;
+      border-color: rgb(60, 65, 68) !important;
+    }
+
+    input,
+    select,
+    option {
+      color: inherit;
+      background-color: rgb(24, 26, 27);
+    }
+
+    option:disabled {
+      color: rgb(92, 92, 92);
+    }
+
+    .new-book-buttons .btn {
+      color: rgb(209, 205, 199) !important;
+      background-color: transparent !important;
+      border-color: rgb(106, 98, 87) !important;
+    }
+  }
+}
+
+.toggle-control {
+  input:checked ~ .control {
+    background-color: rgb(57, 128, 107);
+  }
+
+  .control {
+    background-color: rgb(96, 104, 108);
+    border-color: rgb(48, 52, 54);
+
+    &:after {
+      background-image: initial;
+      background-color: rgb(24, 26, 27);
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  background-color: #202324;
+  color: #aba499;
+}
+::-webkit-scrollbar-corner {
+  background-color: #181a1b;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #454a4d;
+}
+::selection {
+  background-color: #004daa !important;
+  color: #e8e6e3 !important;
+}
